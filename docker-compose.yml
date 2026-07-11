@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+
+  api:
+    build: .
+    container_name: iptv-bot-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://iptv:iptv@db:5432/iptvbot
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    networks:
+      - iptv-net
+
+  worker:
+    build: .
+    container_name: iptv-bot-worker
+    command: celery -A worker.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      - DATABASE_URL=postgresql://iptv:iptv@db:5432/iptvbot
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    networks:
+      - iptv-net
+
+  db:
+    image: postgres:16-alpine
+    container_name: iptv-bot-db
+    environment:
+      - POSTGRES_USER=iptv
+      - POSTGRES_PASSWORD=iptv
+      - POSTGRES_DB=iptvbot
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iptv -d iptvbot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - iptv-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: iptv-bot-redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - iptv-net
+
+volumes:
+  postgres_data:
+
+networks:
+  iptv-net:
+    driver: bridge
+  iptv-net:
+    driver: bridge
