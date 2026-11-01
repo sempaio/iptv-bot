@@ -68,6 +68,27 @@ jobs:
         run: |
           python -m pytest tests/ -v --tb=short
 
+      - name: Smoke isolado de API e worker (PostgreSQL + Redis)
+        env:
+          ALLOW_ISOLATED_SMOKE: "1"
+        run: |
+          set -euo pipefail
+          python -m uvicorn main:app --host 127.0.0.1 --port 18765 > /tmp/iptv-bot-api.log 2>&1 &
+          API_PID=$!
+          python -m celery -A worker.celery_app worker --pool=solo --concurrency=1 --without-gossip --without-mingle --without-heartbeat --loglevel=warning > /tmp/iptv-bot-worker.log 2>&1 &
+          WORKER_PID=$!
+          cleanup() {
+            kill "$API_PID" "$WORKER_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+          if ! python tests/smoke_runtime.py; then
+            echo "=== API ==="
+            tail -n 100 /tmp/iptv-bot-api.log || true
+            echo "=== Celery ==="
+            tail -n 100 /tmp/iptv-bot-worker.log || true
+            exit 1
+          fi
+
   lint:
     runs-on: ubuntu-latest
 
