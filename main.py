@@ -8,13 +8,12 @@ from sqlalchemy import func
 from database import get_db, init_db
 from models import Playlist, Channel, Category, Blacklist, AuditLog
 from schemas import (
-    ChannelOut, PlaylistOut, PlaylistCreate,
+    ChannelOut, PlaylistOut,
     XtreamIngest, BlacklistCreate, BlacklistOut, StatsOut
 )
 from parser import parse_m3u, compute_content_hash
 from xtream import fetch_all_xtream_channels
-from exporter import export_m3u, export_json
-from normalizer import normalize_category, normalize_language, make_dedup_key
+from exporter import export_m3u
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -132,7 +131,7 @@ def list_channels(
     if playlist_id:
         query = query.filter(Channel.playlist_id == playlist_id)
     if not blacklisted:
-        query = query.filter(Channel.is_blacklisted == False)
+        query = query.filter(Channel.is_blacklisted.is_(False))
     return query.offset(skip).limit(limit).all()
 
 
