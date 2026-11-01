@@ -39,6 +39,9 @@ def test_normalize_category(group, name, expected):
         ("es", "", "", "es"),
         ("", "Sem grupo", "", "other"),
         (None, "Sem grupo", "", "other"),
+        ("", "Filmes", "FilmBox", "other"),
+        ("", "Esportes", "Canal", "other"),
+        ("", "Canais BR", "Canal", "pt"),
     ],
 )
 def test_normalize_language(language, group, name, expected):
