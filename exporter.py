@@ -48,7 +48,7 @@ def export_m3u(
         query = query.filter(Channel.language == language)
 
     if not include_blacklisted:
-        query = query.filter(Channel.is_blacklisted == False)
+        query = query.filter(Channel.is_blacklisted.is_(False))
 
     channels = query.order_by(Channel.group_title, Channel.name).all()
 
@@ -64,7 +64,7 @@ def export_json(db: Session, playlist_id: Optional[int] = None) -> List[dict]:
     """
     Exporta canais como lista de dicionarios (para painel).
     """
-    query = db.query(Channel).filter(Channel.is_blacklisted == False)
+    query = db.query(Channel).filter(Channel.is_blacklisted.is_(False))
 
     if playlist_id:
         query = query.filter(Channel.playlist_id == playlist_id)

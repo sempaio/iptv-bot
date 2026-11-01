@@ -3,7 +3,6 @@ from celery import Celery
 from database import SessionLocal
 from models import Playlist, Channel, Category
 from parser import parse_m3u, compute_content_hash
-from normalizer import normalize_category, normalize_language, make_dedup_key
 import requests
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
