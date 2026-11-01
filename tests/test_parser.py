@@ -4,7 +4,8 @@ from parser import parse_m3u
 
 
 M3U_SAMPLE = """#EXTM3U
-#EXTINF:-1 tvg-id="ESPN" tvg-name="ESPN HD" tvg-language="Portugues" tvg-country="BR" group-title="Esportes",ESPN HD
+#EXTINF:-1 tvg-id="ESPN" tvg-name="ESPN HD" tvg-language="Portugues" \
+tvg-country="BR" group-title="Esportes",ESPN HD
 http://example.com/stream/espn
 #EXTINF:-1 tvg-id="CNN" tvg-name="CNN Internacional" tvg-language="English" tvg-country="US" group-title="Noticias",CNN Internacional
 http://example.com/stream/cnn
