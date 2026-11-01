@@ -62,7 +62,13 @@ def normalize_language(language: str, group_title: str, name: str) -> str:
     text = (group_title + " " + name).lower()
     for lang_code, aliases in LANGUAGE_RULES:
         for alias in aliases:
-            if alias in text:
+            # Aliases de 2 letras devem ser palavras completas: 'es' nao e
+            # indicacao de espanhol em 'Filmes' ou 'Esportes'.
+            if len(alias) <= 2:
+                matches = re.search(rf"(?<![a-z0-9]){re.escape(alias)}(?![a-z0-9])", text)
+            else:
+                matches = alias in text
+            if matches:
                 return lang_code
     return "other"
 
