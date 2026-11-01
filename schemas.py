@@ -1,6 +1,6 @@
 from typing import Optional, List
 from datetime import datetime
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, field_validator
 
 
 class ChannelOut(BaseModel):
@@ -16,6 +16,12 @@ class ChannelOut(BaseModel):
     is_blacklisted: bool = False
     is_whitelisted: bool = False
     created_at: datetime
+
+    @field_validator("category", mode="before")
+    @classmethod
+    def category_as_name(cls, value):
+        """Converte a relacao Category em nome para a resposta JSON."""
+        return value.normalized_name if hasattr(value, "normalized_name") else value
 
     class Config:
         from_attributes = True
