@@ -46,7 +46,8 @@ def sample_m3u_content():
 #EXTINF:-1 tvg-id="ESPN" tvg-name="ESPN HD" tvg-language="Portugues" \
 tvg-country="BR" group-title="Esportes",ESPN HD
 http://example.com/stream/espn
-#EXTINF:-1 tvg-id="CNN" tvg-name="CNN Internacional" tvg-language="English" tvg-country="US" group-title="Noticias",CNN Internacional
+#EXTINF:-1 tvg-id="CNN" tvg-name="CNN Internacional" tvg-language="English" \
+tvg-country="US" group-title="Noticias",CNN Internacional
 http://example.com/stream/cnn
 #EXTINF:-1 tvg-id="FILM1" tvg-name="FilmBox" tvg-language="" tvg-country="" group-title="Filmes",FilmBox
 http://example.com/stream/filmbox
